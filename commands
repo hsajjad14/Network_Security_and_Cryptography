@@ -21,4 +21,12 @@ nmap:
 nmap -sT 192.168.10.*
 
 # tcp scan of network 10.10.10.*
-nmap -sT 10.10.10.*
+nmap -sT 10.10.10.10
+
+
+apache2 -v
+apache version 2.2.8
+
+
+php version: dpkg -l | grep  -ie php
+5.2.4
