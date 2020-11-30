@@ -1,0 +1,12 @@
+All questions rely on the network setup given to you in lecture.
+See Diagrams.* in this directory. 
+
+------------------------------------------------------------------------------------
+q4: [1 Marks]
+Place Kali on the 10.10.10.* network
+Run firewallRestrictive on FC4 and then 
+run nmap to list open ports and versions on 10.10.10.10.
+------------------------------------------------------------------------------------
+
+	YOUR SCAN GOES HERE, SHOULD SHOW 10.10.10.10
+

@@ -1,0 +1,24 @@
+commands:
+fc4:
+root/password
+ssh -oKexAlgorithms=+diffie-hellman-group1-sha1 -c aes256-cbc root@192.168.10.10
+ssh -oKexAlgorithms=+diffie-hellman-group1-sha1 -c aes256-cbc root@10.10.10.10
+
+dsl_10:
+ssh -oKexAlgorithms=+diffie-hellman-group1-sha1 -c aes256-cbc 10.10.10.17
+
+dsl_192:
+ssh -oKexAlgorithms=+diffie-hellman-group1-sha1 -c aes256-cbc 192.168.10.17
+
+
+Ubuntu804_owasp:
+arnold/password
+ssh -oKexAlgorithms=+diffie-hellman-group1-sha1 -c aes256-cbc arnold@192.168.10.100
+
+
+nmap:
+# tcp scan of network 192.168.10.*
+nmap -sT 192.168.10.*
+
+# tcp scan of network 10.10.10.*
+nmap -sT 10.10.10.*

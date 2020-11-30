@@ -1,0 +1,12 @@
+All questions rely on the network setup given to you in lecture.
+See Diagrams.* in this directory. 
+
+------------------------------------------------------------------------------------
+q3: [1 Marks]
+Place Kali on the 192.168.10.* network
+Run firewallRestrictive on FC4 and then 
+run nmap to list open ports and versions on the 192.168.10.* network.
+------------------------------------------------------------------------------------
+
+	YOUR SCAN GOES HERE, SHOULD SHOW 192.168.10.10, 192.168.10.17, 192.168.10.100, ...
+

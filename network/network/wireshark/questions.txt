@@ -1,0 +1,11 @@
+[4 Marks]
+I used wireshark to sniff a bit of traffic on my network. 
+Load wiresharkCapture in wireshark on Kali.
+
+Report everything you know about my network and its systems.
+
+	YOUR ANSWER GOES HERE
+
+Riddle: Whats the question?  Whats the answer? 
+
+	YOUR ANSWER GOES HERE

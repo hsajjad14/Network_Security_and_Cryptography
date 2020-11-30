@@ -1,0 +1,49 @@
+All questions rely on the network setup given to you in lecture.
+See Diagrams.* in this directory.
+
+------------------------------------------------------------------------------------
+q2: [1 Marks]
+Place Kali on the 10.10.10.* network
+Run firewallPermissive on FC4 and then
+run nmap to list open ports and versions on 10.10.10.10.
+------------------------------------------------------------------------------------
+
+	YOUR SCAN GOES HERE, SHOULD SHOW 10.10.10.10
+
+	Starting Nmap 7.80 ( https://nmap.org ) at 2020-11-29 22:00 EST
+	Nmap scan report for 10.10.10.1
+	Host is up (0.00051s latency).
+	Not shown: 995 filtered ports
+	PORT     STATE SERVICE
+	135/tcp  open  msrpc
+	139/tcp  open  netbios-ssn
+	445/tcp  open  microsoft-ds
+	903/tcp  open  iss-console-mgr
+	5357/tcp open  wsdapi
+	MAC Address: 00:50:56:C0:00:04 (VMware)
+
+	Nmap scan report for 10.10.10.10
+	Host is up (0.0029s latency).
+	Not shown: 996 closed ports
+	PORT      STATE SERVICE
+	22/tcp    open  ssh
+	111/tcp   open  rpcbind
+	631/tcp   open  ipp
+	32769/tcp open  filenet-rpc
+	MAC Address: 00:0C:29:FC:33:61 (VMware)
+
+	Nmap scan report for 10.10.10.17
+	Host is up (0.0021s latency).
+	All 1000 scanned ports on 10.10.10.17 are closed
+	MAC Address: 00:0C:29:D6:39:2F (VMware)
+
+	Nmap scan report for 10.10.10.254
+	Host is up (0.00013s latency).
+	All 1000 scanned ports on 10.10.10.254 are filtered
+	MAC Address: 00:50:56:E3:F6:9C (VMware)
+
+	Nmap scan report for 10.10.10.129
+	Host is up (0.00011s latency).
+	All 1000 scanned ports on 10.10.10.129 are closed
+
+	Nmap done: 256 IP addresses (5 hosts up) scanned in 33.85 seconds
