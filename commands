@@ -30,3 +30,19 @@ apache version 2.2.8
 
 php version: dpkg -l | grep  -ie php
 5.2.4
+
+
+fixing missing eth0:
+https://chris.dziemborowicz.com/blog/2010/07/25/fix-missing-eth0-when-cloning-ubuntu-vmware-virtual-machines/#:~:text=When%20cloning%20an%20Ubuntu%20VMware,%2Fetc%2Fudev%2Frule.&text=It%20turns%20out%20that%20when,work%20on%20the%20same%20LAN).
+
+  When cloning an Ubuntu VMware virtual machine, eth0 goes missing.
+  Fix the problem by deleting /etc/udev/rule.d/70-persistent-net.rules and rebooting.
+
+chaing ip addres, cmd line:
+https://www.howtogeek.com/118337/stupid-geek-tricks-change-your-ip-address-from-the-command-line-in-linux/
+
+  sudo ifconfig eth0 192.168.0.1 netmask 255.255.255.0
+
+
+add/change gateway:
+https://danielmiessler.com/study/manually-set-ip-linux/

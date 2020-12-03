@@ -10,9 +10,9 @@ run nmap to list open ports and versions on 10.10.10.10.
 
 	YOUR SCAN GOES HERE, SHOULD SHOW 10.10.10.10
 
-	Starting Nmap 7.80 ( https://nmap.org ) at 2020-11-29 23:20 EST
+	Starting Nmap 7.80 ( https://nmap.org ) at 2020-12-02 23:49 EST
 	Nmap scan report for 10.10.10.10
-	Host is up (0.0028s latency).
+	Host is up (0.0019s latency).
 	Not shown: 996 closed ports
 	PORT      STATE SERVICE
 	22/tcp    open  ssh
@@ -21,4 +21,4 @@ run nmap to list open ports and versions on 10.10.10.10.
 	32769/tcp open  filenet-rpc
 	MAC Address: 00:0C:29:FC:33:61 (VMware)
 
-	Nmap done: 1 IP address (1 host up) scanned in 13.20 seconds
+	Nmap done: 1 IP address (1 host up) scanned in 13.19 seconds
