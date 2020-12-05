@@ -82,7 +82,10 @@ $IPT -A FORWARD -p tcp -d 93.184.216.1 --dport 443 -j ACCEPT
 
     # (k) No other access to any hosts is allowed.
 
-# ????
+# Assuming hosts = organization machines, we have a default drop policy (blacklist everything) at the top, or if we list it again:
+$IPT -P INPUT DROP
+$IPT -P OUPUT DROP
+$IPT -P FORWARD DROP
 
     # (l) 17.17.17.17 has been found to be attacking the organizations systems. Access
     #     to all services from this IP is denied.

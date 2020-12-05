@@ -38,7 +38,7 @@ https://chris.dziemborowicz.com/blog/2010/07/25/fix-missing-eth0-when-cloning-ub
   When cloning an Ubuntu VMware virtual machine, eth0 goes missing.
   Fix the problem by deleting /etc/udev/rule.d/70-persistent-net.rules and rebooting.
 
-chaing ip addres, cmd line:
+changing ip addres, cmd line:
 https://www.howtogeek.com/118337/stupid-geek-tricks-change-your-ip-address-from-the-command-line-in-linux/
 
   sudo ifconfig eth0 192.168.0.1 netmask 255.255.255.0
@@ -46,6 +46,51 @@ https://www.howtogeek.com/118337/stupid-geek-tricks-change-your-ip-address-from-
 
 add/change gateway:
 https://danielmiessler.com/study/manually-set-ip-linux/
-
+route add default gw 192.168.1.1
 
 iptables tut: https://www.frozentux.net/documents/iptables-tutorial/
+
+
+allow ssh from kali to firewall1 on vmnet3:
+(assuming state rules are set)
+$IPT -A INPUT -p tcp -d 192.168.10.129 --dport 22 -j ACCEPT # vmnet3
+$IPT -A INPUT -p tcp -d 192.168.111.128 --dport 22 -j ACCEPT # nat
+$IPT -A INPUT -p tcp -d 93.184.216.128 --dport 22 -j ACCEPT # vmnet2
+
+add default gateway of kali on vmnet2:
+don't have a default gateway!!!
+route add default gw 93.184.216.34
+
+
+To setup the network (firewall1):
+(and change all ips to there appropriate, add default gw's too)
+
+set fc4 clone:
+  eth1: vmnet3
+  eth0: nat
+webserver: vmnet3
+mailserver: vmnet3
+
+allow everything in firewall1, then on kali get on fourfours
+$IPT -P INPUT ACCEPT
+$IPT -P OUTPUT ACCEPT
+$IPT -P FORWARD ACCEPT
+we can do http://192.168.10.100/fourFours/index.php
+proof:
+
+root@kali:/home/kali# netstat
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State
+tcp        0      0 93.184.216.128:50790    93.184.216.34:ssh       ESTABLISHED
+tcp        0      0 93.184.216.128:60782    192.168.10.100:http     ESTABLISHED
+
+after running blacklist all commands we cant get into site
+
+after running (a) and (b) we can get into http://93.184.216.34/fourFours/index.php
+and the returned ip is the organizations.
+proof:
+root@kali:/home/kali# netstat
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State
+tcp        0      0 93.184.216.128:50790    93.184.216.34:ssh       ESTABLISHED
+tcp        0      0 93.184.216.128:35830    93.184.216.34:http      ESTABLISHED
