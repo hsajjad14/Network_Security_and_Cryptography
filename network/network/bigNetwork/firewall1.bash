@@ -20,6 +20,12 @@ $IPT -P INPUT DROP
 $IPT -P OUTPUT DROP
 $IPT -P FORWARD DROP
 
+# when we recieve ip addresses behind firewall2, default it to firewall2
+route add -net 192.168.11.0 netmask 255.255.255.0 gw 192.168.10.11
+
+# defaul out to the web
+route add default gw 93.184.216.34
+
 # use postrouting to hide our entire network behind 93.184.216.34
 $IPT -t nat -A POSTROUTING -o eth0 -j SNAT --to 93.184.216.34
 
@@ -84,12 +90,23 @@ $IPT -A FORWARD -p tcp -s 34.14.10.18 -d 192.168.11.18 --dport 22 -j ACCEPT
 
     # (g) The mail server at 192.168.10.25 is accessible from the LAN.
 
-# NO RULE NEEDED HERE                                                                         #(g)
+# Refresh default rules, for some reason this is required
+$IPT -P INPUT ACCEPT
+$IPT -P OUTPUT ACCEPT
+$IPT -P FORWARD ACCEPT
+
+$IPT -P INPUT DROP
+$IPT -P OUTPUT DROP
+$IPT -P FORWARD DROP
+
+# Forward packets from mailserver
+$IPT -A FORWARD -p tcp -s 192.168.10.25 --dport 22 -j ACCEPT
 
     # (h) The web server (192.168.10.100) is running some web applications, it is accessible
     #     from the LAN.
 
-# NO RULE NEEDED HERE                                                                         #(h)
+# Forward packets
+# $IPT -A FORWARD -p tcp -s 192.168.10.100 --dport 80 -j ACCEPT
 
     # (i) To get its work done, the web server needs to connect to the postgresql db server at 192.168.11.100
     #     No other connection into the db server are allowed.

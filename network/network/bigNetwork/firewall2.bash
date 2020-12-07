@@ -17,8 +17,11 @@ $IPT -A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT
 
 # First add default blacklist to both firewalls
 $IPT -P INPUT DROP
-$IPT -P OUPUT DROP
+$IPT -P OUTPUT DROP
 $IPT -P FORWARD DROP
+
+# for firewall2 default out to firewall1:
+route add default gw 192.168.10.11
 
     # (b) As far as the internet is concerned, the organization is running a web server
     #     at IP 93.184.216.34. All http traffic received at Firewall1 is forwarded to

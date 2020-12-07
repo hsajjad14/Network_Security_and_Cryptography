@@ -46,24 +46,37 @@ https://www.howtogeek.com/118337/stupid-geek-tricks-change-your-ip-address-from-
 
 add/change gateway:
 https://danielmiessler.com/study/manually-set-ip-linux/
-route add default gw 192.168.1.1
+route add default gw 192.168.10.11
 
 iptables tut: https://www.frozentux.net/documents/iptables-tutorial/
 
 
-allow ssh from kali to firewall1 on vmnet3:
+allow ssh from kali to firewall1 on and firewall2:
 (assuming state rules are set)
-$IPT -A INPUT -p tcp -d 192.168.10.129 --dport 22 -j ACCEPT # vmnet3
-$IPT -A INPUT -p tcp -d 192.168.111.128 --dport 22 -j ACCEPT # nat
-$IPT -A INPUT -p tcp -d 93.184.216.128 --dport 22 -j ACCEPT # vmnet2
+$IPT -A INPUT -p tcp -s 192.168.10.129 --dport 22 -j ACCEPT # vmnet3
+$IPT -A INPUT -p tcp -s 192.168.111.128 --dport 22 -j ACCEPT # nat
+$IPT -A INPUT -p tcp -s 93.184.216.128 --dport 22 -j ACCEPT # vmnet2
 
 add default gateway of kali on vmnet2:
 don't have a default gateway!!!
 route add default gw 93.184.216.34
 
+delete default route: https://howto.lintel.in/add-delete-routes-linux/
+route del default
+or
+sudo route del -net 192.168.11.0 gw 192.168.10.11 netmask 255.255.255.0 dev eth1
+
 
 To setup the network (firewall1):
 (and change all ips to there appropriate, add default gw's too)
+
+route a specific ip to a specific destination:
+for firewall1:
+route add -net 192.168.11.0 netmask 255.255.255.0 gw 192.168.10.11
+
+for firewall2 default out to firewall1:
+route add default gw 192.168.10.10
+
 
 set fc4 clone:
   eth1: vmnet3
@@ -94,3 +107,109 @@ Active Internet connections (w/o servers)
 Proto Recv-Q Send-Q Local Address           Foreign Address         State
 tcp        0      0 93.184.216.128:50790    93.184.216.34:ssh       ESTABLISHED
 tcp        0      0 93.184.216.128:35830    93.184.216.34:http      ESTABLISHED
+
+(d)
+      test on dsl_10 ip:93.184.216.22
+
+      ssh root@93.184.216.34
+      doesn't work
+
+      # allow admin's home machine to be able to ssh into firewall1 (firewall1 can reply b/c of the state rules)
+      $IPT -A INPUT -p tcp -s 93.184.216.22 --dport 22 -j ACCEPT
+
+      ssh root@93.184.216.34
+      works
+
+      # firewall1: allow admins office machine to be able to ssh into firewall1
+      $IPT -A INPUT -p tcp -s 192.168.11.19 --dport 22 -j ACCEPT
+
+      # firewall2: Allow forwarding through firewall2 from admin's office machine to firewall1
+      $IPT -A FORWARD -p tcp -s 192.168.11.19 -d 192.168.10.10 --dport 22 -j ACCEPT
+
+      ssh root@93.184.216.34
+      works
+
+(e)
+
+  firewall1:
+  # redirect traffic from port 3389 on ip 93.184.216.34 coming from ceo's home machine to ceo's office desktop
+  $IPT -t nat -A PREROUTING -i eth0 -p tcp -s 34.14.10.18 --dport 3389 -j DNAT --to 192.168.11.18
+
+  # allow forwarding of rdp from ceo's home machine through firewall1 to ceo's office desktop
+  $IPT -A FORWARD -p tcp -s 34.14.10.18 -d 192.168.11.18 --dport 3389 -j ACCEPT
+
+  firewall2:
+  # Allow forwarding through firewall2 from ceo's home machine to their office
+  $IPT -A FORWARD -p tcp -s 34.14.10.18 -d 192.168.11.18 --dport 3389 -j ACCEPT
+
+  ceo ip is: 93.184.216.130
+
+  firewall1:
+  # redirect traffic from port 3389 on ip 93.184.216.34 coming from ceo's home machine to ceo's office desktop
+  $IPT -t nat -A PREROUTING -i eth0 -p tcp -s 93.184.216.130 --dport 3389 -j DNAT --to 192.168.11.18
+
+  # allow forwarding of rdp from ceo's home machine through firewall1 to ceo's office desktop
+  $IPT -A FORWARD -p tcp -s 93.184.216.130 -d 192.168.11.18 --dport 3389 -j ACCEPT
+
+  firewall2:
+  # Allow forwarding through firewall2 from ceo's home machine to their office
+  $IPT -A FORWARD -p tcp -s 93.184.216.130 -d 192.168.11.18 --dport 3389 -j ACCEPT
+
+
+  # not working??
+
+(f)
+  (i)
+      # firewall1
+      # redirect traffic from port 2222 coming from 128.2.2.17 to admin's office machine (192.168.11.19)
+      $IPT -t nat -A PREROUTING -i eth0 -p tcp -s 128.2.2.17 --dport 2222 -j DNAT --to 192.168.11.19:22
+
+      # allow admin to ssh into their machine from their home via port 2222
+      $IPT -A FORWARD -p tcp -s 128.2.2.17 -d 192.168.11.19 --dport 22 -j ACCEPT
+
+      # admins ip is 93.184.216.129
+      # redirect traffic from port 2222 coming from 93.184.216.129 to admin's office machine (192.168.11.19)
+      $IPT -t nat -A PREROUTING -i eth0 -p tcp -s 93.184.216.129 --dport 2222 -j DNAT --to 192.168.11.19:22
+
+      # allow admin to ssh into their machine from their home via port 2222
+      $IPT -A FORWARD -p tcp -s 93.184.216.129 -d 192.168.11.19 --dport 22 -j ACCEPT
+
+      #firewall2
+      # allow admin to ssh into their machine from their home via port 2222
+      $IPT -A FORWARD -p tcp -s 128.2.2.17 -d 192.168.11.19 --dport 22 -j ACCEPT
+
+      ()# pretend its for ubuntu (192.168.11.100) on firewall2()
+      # admins ip is 93.184.216.129
+      # redirect traffic from port 2222 coming from 93.184.216.129 to admin's office machine (192.168.11.19)
+      $IPT -t nat -A PREROUTING -i eth0 -p tcp -s 93.184.216.129 --dport 2222 -j DNAT --to 192.168.11.100:22
+
+      # allow admin to ssh into their machine from their home via port 2222
+      $IPT -A FORWARD -p tcp -s 93.184.216.129 -d 192.168.11.100 --dport 22 -j ACCEPT
+
+      #firewall2
+      # allow admin to ssh into their machine from their home via port 2222
+      $IPT -A FORWARD -p tcp -s 93.184.216.129 -d 192.168.11.100 --dport 22 -j ACCEPT
+
+      ssh -p 2222 arnold@192.168.11.100
+      works
+
+  (ii)
+      # firewall1
+      # ceo ip: 93.183.216.130
+      # redirect traffic from port 2222 coming from 34.14.10.18 to ceo's office machine
+      $IPT -t nat -A PREROUTING -i eth0 -p tcp -s 93.183.216.130 --dport 2222 -j DNAT --to 192.168.11.18:22
+
+      # allow ceo to ssh into their machine from their home via port 2222
+      $IPT -A FORWARD -p tcp -s 93.183.216.130 -d 192.168.11.18 --dport 22 -j ACCEPT
+
+      #firewall2
+      # allow ceo to ssh into their machine from their home via port 2222
+      $IPT -A FORWARD -p tcp -s 93.183.216.130 -d 192.168.11.18 --dport 22 -j ACCEPT
+(g)
+    $IPT -A FORWARD -p tcp -s 192.168.11.100 -d 192.168.10.25 --dport 22 -j ACCEPT
+    not working
+
+(h)
+    works
+
+(i)
