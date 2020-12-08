@@ -88,6 +88,10 @@ allow everything in firewall1, then on kali get on fourfours
 $IPT -P INPUT ACCEPT
 $IPT -P OUTPUT ACCEPT
 $IPT -P FORWARD ACCEPT
+
+$IPT -P INPUT DROP
+$IPT -P OUTPUT DROP
+$IPT -P FORWARD DROP
 we can do http://192.168.10.100/fourFours/index.php
 proof:
 
@@ -209,7 +213,60 @@ tcp        0      0 93.184.216.128:35830    93.184.216.34:http      ESTABLISHED
     $IPT -A FORWARD -p tcp -s 192.168.11.100 -d 192.168.10.25 --dport 22 -j ACCEPT
     not working
 
+    done
 (h)
-    works
+    works (except for xp??)
 
 (i)
+
+
+
+(l)
+    test with 93.184.216.129 instead
+
+    $IPT -A INPUT -s 17.17.17.17 -j DROP
+    $IPT -A FORWARD -s 17.17.17.17 -j DROP
+
+    turns into
+
+    $IPT -I INPUT -s 93.184.216.129 -j DROP
+    $IPT -I FORWARD -s 93.184.216.129 -j DROP
+
+    works
+
+
+==========================================
+testing again
+===========================================
+(a)
+    works
+(b)
+    works
+(c)
+    can't test(?) but should work
+(d)
+    works with admin remote
+    works with admin local
+(e)
+    works
+(f)
+    cant ssh into dsl_192
+    cant ssh in windows xp from linux
+(g)
+    works (for everything is it supp to be only smtp??)
+(h)
+    works, had to fix dport to sport
+(i)
+    can't test, telnet to 5432 port not working
+(j)
+    can't test
+(i)
+    can't test
+(k)
+    shold work
+(l)
+    test with admin's ip
+    93.184.216.129
+    works
+(m)
+    can't test but should work.

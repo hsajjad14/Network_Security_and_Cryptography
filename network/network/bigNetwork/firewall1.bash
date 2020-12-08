@@ -89,29 +89,23 @@ $IPT -t nat -A PREROUTING -i eth0 -p tcp -s 34.14.10.18 --dport 2222 -j DNAT --t
 $IPT -A FORWARD -p tcp -s 34.14.10.18 -d 192.168.11.18 --dport 22 -j ACCEPT
 
     # (g) The mail server at 192.168.10.25 is accessible from the LAN.
-
-# Refresh default rules, for some reason this is required
-$IPT -P INPUT ACCEPT
-$IPT -P OUTPUT ACCEPT
-$IPT -P FORWARD ACCEPT
-
-$IPT -P INPUT DROP
-$IPT -P OUTPUT DROP
-$IPT -P FORWARD DROP
-
 # Forward packets from mailserver
-$IPT -A FORWARD -p tcp -s 192.168.10.25 --dport 22 -j ACCEPT
+# Forward packets from mailserver, for each specific machine
+$IPT -A FORWARD -s 192.168.10.25 -d 192.168.11.19 -j ACCEPT
+$IPT -A FORWARD -s 192.168.10.25 -d 192.168.11.100 -j ACCEPT
+$IPT -A FORWARD -s 192.168.10.25 -d 192.168.11.18 -j ACCEPT
 
     # (h) The web server (192.168.10.100) is running some web applications, it is accessible
     #     from the LAN.
 
 # Forward packets
-# $IPT -A FORWARD -p tcp -s 192.168.10.100 --dport 80 -j ACCEPT
+$IPT -A FORWARD -p tcp -s 192.168.10.100 --sport 80 -j ACCEPT
 
     # (i) To get its work done, the web server needs to connect to the postgresql db server at 192.168.11.100
     #     No other connection into the db server are allowed.
 
-# NO RULE NEEDED HERE                                                                         #(i)
+# Allow forwarding from webserver to postgresql server
+$IPT -A FORWARD -d 192.168.11.100 -s 192.168.10.100 -j ACCEPT
 
     # (j) All LAN machines can access the internet, but are restricted to web (http and https) traffic only.
     #     So, for example, none of the LAN machines can ssh out past firewall1.
@@ -124,18 +118,21 @@ $IPT -A FORWARD -p tcp -d 93.184.216.1 --dport 443 -j ACCEPT
 
 # Assuming hosts = organization machines, we have a default drop policy (blacklist everything) at the top, or if we list it again:
 $IPT -P INPUT DROP
-$IPT -P OUPUT DROP
+$IPT -P OUTPUT DROP
 $IPT -P FORWARD DROP
 
     # (l) 17.17.17.17 has been found to be attacking the organizations systems. Access
     #     to all services from this IP is denied.
 
 # drop any packets coming from 17.17.17.17, either through or to firewall1
-$IPT -A INPUT -s 17.17.17.17 -j DROP
-$IPT -A FORWARD -s 17.17.17.17 -j DROP
+# -I places this at the top, so it gets dropped right away.
+$IPT -I INPUT -s 17.17.17.17 -j DROP
+$IPT -I FORWARD -s 17.17.17.17 -j DROP
 
     # (m) As a precaution, in case 17.17.17.17 has compromised one of our systems,
     #     no outgoing connections to 17.17.17.17 are allowed.
 
 # drop any packets going to 17.17.17.17
-$IPT -A OUTPUT -s 17.17.17.17 -j DROP
+# -I places this at the top, so it gets dropped right away.
+$IPT -I OUTPUT -d 17.17.17.17 -j DROP
+$IPT -I FORWARD -d 17.17.17.17 -j DROP

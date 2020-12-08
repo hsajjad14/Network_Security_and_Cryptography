@@ -21,7 +21,7 @@ $IPT -P OUTPUT DROP
 $IPT -P FORWARD DROP
 
 # for firewall2 default out to firewall1:
-route add default gw 192.168.10.11
+route add default gw 192.168.10.10
 
     # (b) As far as the internet is concerned, the organization is running a web server
     #     at IP 93.184.216.34. All http traffic received at Firewall1 is forwarded to
@@ -40,6 +40,7 @@ route add default gw 192.168.10.11
 
 # Allow forwarding through firewall2 from admin's office machine to firewall1
 $IPT -A FORWARD -p tcp -s 192.168.11.19 -d 192.168.10.10 --dport 22 -j ACCEPT
+$IPT -A FORWARD -p tcp -s 192.168.11.19 -d 93.184.216.34 --dport 22 -j ACCEPT
 
     # (e) The ceo can, from their home machine (34.14.10.18) rdp into their office
     #     desktop (192.168.11.18) using port 3389 on Firewall1.
@@ -61,8 +62,9 @@ $IPT -A FORWARD -p tcp -s 34.14.10.18 -d 192.168.11.18 --dport 22 -j ACCEPT
 
     # (g) The mail server at 192.168.10.25 is accessible from the LAN.
 
-# Allow anyone in the organization to ssh into the mailserver (port 22)
-$IPT -A FORWARD -p tcp -d 192.168.10.25 --dport 22 -j ACCEPT
+# Allow anyone in the organization to get into the mailserver (port 22)
+$IPT -A FORWARD -d 192.168.10.25 -j ACCEPT
+# $IPT -A FORWARD -p tcp -d 192.168.10.25 --dport 22 -j ACCEPT
 
     # (h) The web server (192.168.10.100) is running some web applications, it is accessible
     #     from the LAN.
@@ -87,16 +89,21 @@ $IPT -A FORWARD -p tcp -d 93.184.216.1 --dport 443 -j ACCEPT
 
 # Assuming hosts = organization machines, we have a default drop policy (blacklist everything) at the top, or if we list it again:
 $IPT -P INPUT DROP
-$IPT -P OUPUT DROP
+$IPT -P OUTPUT DROP
 $IPT -P FORWARD DROP
 
     # (l) 17.17.17.17 has been found to be attacking the organizations systems. Access
     #     to all services from this IP is denied.
 
-# NO RULE NEEDED HERE                                                                         #(l)
+# This won't ever get run, its just for precaution
+# -I places this at the top, so it gets dropped right away.
+$IPT -I INPUT -s 17.17.17.17 -j DROP
+$IPT -I FORWARD -s 17.17.17.17 -j DROP
 
     # (m) As a precaution, in case 17.17.17.17 has compromised one of our systems,
     #     no outgoing connections to 17.17.17.17 are allowed.
 
 # drop any packets going to 17.17.17.17
-$IPT -A OUTPUT -s 17.17.17.17 -j DROP
+# -I places this at the top, so it gets dropped right away.
+$IPT -I OUTPUT -d 17.17.17.17 -j DROP
+$IPT -I FORWARD -d 17.17.17.17 -j DROP
