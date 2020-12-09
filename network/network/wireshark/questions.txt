@@ -1,11 +1,21 @@
 [4 Marks]
-I used wireshark to sniff a bit of traffic on my network. 
+I used wireshark to sniff a bit of traffic on my network.
 Load wiresharkCapture in wireshark on Kali.
 
 Report everything you know about my network and its systems.
 
-	YOUR ANSWER GOES HERE
+	- The ip address of the machine Arnold is using is 192.168.1.138,
+		and it's mac address is 00:12:3f:9f:f3:b0.
+	- There are two other machine's on the network: 192.168.1.130 and
+		128.100.3.30
+	- 128.100.3.30 is connected to the internet
+	- another ip address on the network is 192.168.1.1
+		with mac address 00:21:29:a5:a2:2b
+	- mac address of 192.168.1.130 is at 08:00:27:37:5b:43
+	- the site that arnold visited is http://www.cs.toronto.edu/~arnold/347/11f/assignments/03/special/
+		and the credentials to login to the site are username: smartStudent and password: problemSolved
 
-Riddle: Whats the question?  Whats the answer? 
+Riddle: Whats the question?  Whats the answer?
 
-	YOUR ANSWER GOES HERE
+	The question is: What's fast
+	The answer is: smokin' tuna (utm 2007 dragon boat team)

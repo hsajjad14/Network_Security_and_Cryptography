@@ -24,39 +24,36 @@ as described.
 
 q1) netstat -rn # as executed on Firewall1 93.184.216.34 (aka 192.168.10.10)
 
-	YOUR OUTPUT GOES HERE
-
 	Kernel IP routing table
 	Destination     Gateway         Genmask         Flags   MSS Window  irtt Iface
-	192.168.10.10   0.0.0.0         255.255.255.0   U         0 0          0 eth1
-	93.184.216.34   0.0.0.0         255.255.255.0   U         0 0          0 eth0
+	192.168.11.0    192.168.10.11   255.255.255.0   UG        0 0          0 eth1
+	192.168.10.0    0.0.0.0         255.255.255.0   U         0 0          0 eth1
+	93.184.216.0    0.0.0.0         255.255.255.0   U         0 0          0 eth0
+	0.0.0.0         93.184.216.34   0.0.0.0         UG        0 0          0 eth0
 
 
 q2) netstat -rn # as executed on iFirewall2 192.168.10.11 (aka 192.168.11.10)
-
-	YOUR OUTPUT GOES HERE
 
 	Kernel IP routing table
 	Destination     Gateway         Genmask         Flags   MSS Window  irtt Iface
 	192.168.11.0    0.0.0.0         255.255.255.0   U         0 0          0 eth1
 	192.168.10.0    0.0.0.0         255.255.255.0   U         0 0          0 eth0
+	0.0.0.0         192.168.10.10   0.0.0.0         UG        0 0          0 eth0
+
 
 q3) netstat -rn # as executed on the db server 192.168.11.100
-
-	YOUR OUTPUT GOES HERE
 
 	Kernel IP routing table
 	Destination     Gateway         Genmask         Flags   MSS Window  irtt Iface
 	192.168.11.0    0.0.0.0         255.255.255.0   U         0 0          0 eth0
+	0.0.0.0         192.168.11.10   0.0.0.0         UG        0 0          0 eth0
 
 q4) netstat -rn # as executed on the web server 192.168.10.100
-
-	YOUR OUTPUT GOES HERE
 
 	Kernel IP routing table
 	Destination     Gateway         Genmask         Flags   MSS Window  irtt Iface
 	192.168.10.0    0.0.0.0         255.255.255.0   U         0 0          0 eth0
-
+  0.0.0.0         192.168.10.10   0.0.0.0         UG        0 0          0 eth0
 
 ----------------------------------------------------------------------------
 [20 Marks]
