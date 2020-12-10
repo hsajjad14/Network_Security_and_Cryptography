@@ -81,7 +81,7 @@ openssl rand -base64 32 > LargeFileKey
 # step 2: encrypting that key, saving it as LargeFileKey.enc
 openssl rsautl -encrypt -inkey pubkey.pem -pubin -in LargeFileKey -out LargeFileKey.enc
 
-# step 3: encrypting publicfile.long and placing the result in privatefile.long using key LargeFileKey.enc
+# step 3: encrypting publicfile.long and placing the result in privatefile.long using key LargeFileKey
 openssl enc -aes-256-cbc -pbkdf2 -iter 100000 -salt -in publicfile.long -out privatefile.long -k LargeFileKey
 
 
