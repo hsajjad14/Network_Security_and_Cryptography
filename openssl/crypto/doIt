@@ -6,33 +6,40 @@
 
 openssl x509 -in bigbadcert.pem -noout -text
 # DOCUMENT ITS OUTPUT, DESCRIBE THE IMPORTANT PARTS OF bigbad x509 certificate
-# 
+#
 # YOUR ANSWER GOES HERE
-# 
-# Is bigbadcert.pem self signed? If not, who signed it? How would you verify 
-# that it was correctly signed? 
-# 
+# - It is a x509 certificate signed by Arnold for someone named bigbad (wolf?) in
+#   the organization 'three little pigs Inc.' in Toronto.
+# - It is valid from Nov 23 2020 to Nov 23 2021
+# - The certificate can't sign other other certificates and it also
+#
+# Is bigbadcert.pem self signed? If not, who signed it? How would you verify
+# that it was correctly signed?
+#
 # YOUR ANSWER GOES HERE
-# 
+# - it is signed by arnold
+# - using this command: "openssl verify -verbose -CAfile arnoldscert.pem  bigbadcert.pem"
+#   and output: "bigbadcert.pem: OK", we can verify that the certificate is correctly signed.
+#   To do this we need to download arnoldscert.pem from the website too.
 
 # Is bigbadcert.pem a Certificate Authority?
-# 
+#
 # YOUR ANSWER GOES HERE
-# 
+# - No, it cannot sign other certificates.
 
 openssl x509 -in bigbadcert.pem -pubkey -noout > pubkey.pem
 # What does the above do?
-# 
+#
 # YOUR ANSWER GOES HERE
-# 
+# - it saves the public key of the certificate bigbadcert.pem in pubkey.pem
 
 # In what follows, you use pubkey.pem encrypt and send publicfile.short to bigbad
 
 openssl pkeyutl -encrypt -pubin -in publicfile.short -out privatefile.short -inkey pubkey.pem  -keyform PEM
 # What does the above do?
-# 
+#
 # YOUR ANSWER GOES HERE
-# 
+#
 # If you had bigbad private key, you could decrypt the privatefile.short using...
 # openssl pkeyutl -decrypt -in privatefile.short -out publicfile.short2 -inkey key.pem -keyform PEM
 
@@ -41,28 +48,27 @@ openssl pkeyutl -encrypt -pubin -in publicfile.short -out privatefile.short -ink
 
 openssl pkeyutl -encrypt -pubin -in publicfile.long -out privatefile.long -inkey pubkey.pem  -keyform PEM
 # What does the above do?
-# 
+#
 # YOUR ANSWER GOES HERE
-# 
+#
 # EXPLAIN THE ERROR MESSAGE (See the definition of RSA in the lecture notes)
-# 
+#
 # YOUR ANSWER GOES HERE
-# 
+#
 
 # It seems that we can only use RSA on short messages, so encrypt a short session key and then
 # use that with AES to encrypt publicfile.long
 # produce sessionKey AND privatefile.long in this directory
-# 
+#
 # YOUR ANSWER GOES HERE (all openssl commands to accomplish the job)
-# 
+#
 
-# Complete the following: 
+# Complete the following:
 # If you had bigbad private key, you could decrypt the sessionKey using ...
-# 
+#
 # YOUR ANSWER GOES HERE
-# 
+#
 # and then decrypt privatefile.long using ...
-# 
+#
 # YOUR ANSWER GOES HERE
-# 
-
+#
