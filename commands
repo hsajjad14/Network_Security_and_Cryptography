@@ -270,3 +270,47 @@ testing again
     works
 (m)
     can't test but should work.
+
+
+
+
+==============================
+p1
+==============================
+kali@kali:~/Desktop/a4/openssl$ openssl ca -config openssl.conf  -in $DEMOCA/requests/req.pem -out client/newcert.pem
+Using configuration from openssl.conf
+Can't load /home/kali/.rnd into RNG
+140520219047168:error:2406F079:random number generator:RAND_load_file:Cannot open file:../crypto/rand/randfile.c:98:Filename=/home/kali/.rnd
+Enter pass phrase for ./demoCA/private/cakey.pem:
+Check that the request matches the signature
+Signature ok
+Certificate Details:
+        Serial Number: 4097 (0x1001)
+        Validity
+            Not Before: Dec  9 22:49:36 2020 GMT
+            Not After : Dec  9 22:49:36 2021 GMT
+        Subject:
+            countryName               = CA
+            stateOrProvinceName       = Ontario
+            localityName              = Oshawa
+            organizationName          = Broken Leg Ltd.
+            organizationalUnitName    = IT
+            commonName                = cast.brokenleg.com
+            emailAddress              = femur@brokenleg.com
+        X509v3 extensions:
+            X509v3 Basic Constraints:
+                CA:FALSE
+            Netscape Comment:
+                OpenSSL Generated Certificate
+            X509v3 Subject Key Identifier:
+                9F:55:5E:D1:38:5A:40:D4:D9:3C:34:06:BA:22:87:F9:10:67:91:BF
+            X509v3 Authority Key Identifier:
+                keyid:FF:A2:45:59:AB:C7:CC:66:97:C2:44:9E:F6:84:B6:37:A4:E7:CD:8C
+
+Certificate is to be certified until Dec  9 22:49:36 2021 GMT (365 days)
+Sign the certificate? [y/n]:y
+
+
+1 out of 1 certificate requests certified, commit? [y/n]y
+Write out database with 1 new entries
+Data Base Updated

@@ -4,7 +4,7 @@ DEMOCA="demoCA";
 
 if  [ -d $DEMOCA ]; then
 	echo "$DEMOCA exists, remove first before setup";
-else 
+else
 	echo "$DEMOCA does not exist, creating";
 	mkdir $DEMOCA
 	mkdir $DEMOCA/certs
@@ -17,21 +17,22 @@ else
 
 	# WHAT DOES THE ABOVE DO?
 	# YOUR ANSWER GOES HERE
-	- first it checks if there is already a directory called demoCA and if there is it throws an error
-	- if there is not: 
-		- it creates the directory demoCA with subdirectories certs, crl, newcerts, requests and private.
-		- it creates a file called index.txt in the demoCA directory
-		- it creates a file called serial in the demoCA directory and writes "1000" to it
-	  
+	#
+	# - first it checks if there is already a directory called demoCA and if there is it throws an error
+	# - if there is not:
+	# 	- it creates the directory demoCA with subdirectories certs, crl, newcerts, requests and private.
+	# 	- it creates a file called index.txt in the demoCA directory
+	# 	- it creates a file called serial in the demoCA directory and writes "1000" to it
+
 
 	openssl genrsa -des3 -out $DEMOCA/private/cakey.pem 1024
 	openssl req -config openssl.conf -new -x509 -days 1001 -key $DEMOCA/private/cakey.pem -out $DEMOCA/cacert.pem
-	# The above does ... (high level answer expected) 
-	# 
+	# The above does ... (high level answer expected)
+	#
 	# 	YOUR ANSWER GOES HERE
 	#   - This generates a 1024 bit RSA private key that is encrypted with the des3 algorithm and stored in
-	#     /demoCA/private/cakey.pem
-	#   - The second command creates a self signed x509 certificate that is signed by the key created above and certified for 			1001 days and stores it in /demoCA/cacert.pm
+	#     /demoCA/private/cakey.pem (password 1234)
+	#   - The second command creates a self signed x509 certificate that is signed by the key created above and certified for 1001 days and stores it in /demoCA/cacert.pm
 	#
 	# Look in the $DEMOCA directories and document the files that were created
 	# The following files will be created in $DEMOCA
@@ -39,17 +40,24 @@ else
 	# 	YOUR DESCRIPTION OF THIS FILE BELOW, WHAT DOES IT CONTAIN, WHAT IS ITS ROLE IN THIS GAME
 	# 	YOUR ANSWER GOES HERE
 	# 	...
-	# 
+	#
+	#
+	#
+	#
 	# $DEMOCA/cacert.pem
 	# 	YOUR DESCRIPTION OF THIS FILE BELOW, WHAT DOES IT CONTAIN, WHAT IS ITS ROLE IN THIS GAME
 	# 	YOUR ANSWER GOES HERE
 	# 	...
 	# ...
-	# 
+	#
+	#		using the command: "openssl x509 -in cacert.pem -inform pem -text -noout"
+	#		we can see that this file is a self signed x509 certificate, signed by "Haider Sajjd"
+	#
+	#
 
 	openssl x509 -in $DEMOCA/cacert.pem -noout -text
 	# DOCUMENT ITS OUTPUT, DESCRIBE THE IMPORTANT PARTS OF YOUR x509 certificate
-	# 
+	#
 	# 	YOUR ANSWER GOES HERE
-	
+
 fi
