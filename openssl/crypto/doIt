@@ -38,7 +38,9 @@ openssl x509 -in bigbadcert.pem -pubkey -noout > pubkey.pem
 openssl pkeyutl -encrypt -pubin -in publicfile.short -out privatefile.short -inkey pubkey.pem  -keyform PEM
 # What does the above do?
 #
-# YOUR ANSWER GOES HERE
+# This command uses the public key operation (pkeyutl) to encrypt 'publicfile.short' and saves the result in
+# 'privatefile.short'. It uses the public key we generated of the bigbadcert.pem certificate (pubkey.pem) and saves
+# it as a pem file.
 #
 # If you had bigbad private key, you could decrypt the privatefile.short using...
 # openssl pkeyutl -decrypt -in privatefile.short -out publicfile.short2 -inkey key.pem -keyform PEM
@@ -49,26 +51,44 @@ openssl pkeyutl -encrypt -pubin -in publicfile.short -out privatefile.short -ink
 openssl pkeyutl -encrypt -pubin -in publicfile.long -out privatefile.long -inkey pubkey.pem  -keyform PEM
 # What does the above do?
 #
-# YOUR ANSWER GOES HERE
+# The above command attempts to encrypt publicfile.long using the public key of bigbadcert.pem and
+# save the result in privatefile.long as a pem file.
+#
 #
 # EXPLAIN THE ERROR MESSAGE (See the definition of RSA in the lecture notes)
 #
-# YOUR ANSWER GOES HERE
+# the error message is:
+#     Public Key operation error
+#     140029099537664:error:0406D06E:rsa routines:RSA_padding_add_PKCS1_type_2:data too large for key size:../crypto/rsa/rsa_pk1.c:124:
 #
+# - RSA encryption uses factoring of large prime numbers. So if the size of our message(m) is M = |m| and
+#   M < p*q then our p and/or q have to be larger than M. In this case the message to be encrypted is very large,
+#   to be specific it is 25559 characters (bytes). So our p and/or q have to also be very large. So the modular
+#   calculations needed for RSA are unfeesible, as the numbers are too large. Example calculation: M^e mod p*q
+#
+# - More specifically the error is saying: RSA adds padding to messages (RSA_padding_add_PKCS1_type_2) and in this case
+#   the message we are encrypting is too large for the padding to be added.
 
 # It seems that we can only use RSA on short messages, so encrypt a short session key and then
 # use that with AES to encrypt publicfile.long
 # produce sessionKey AND privatefile.long in this directory
 #
 # YOUR ANSWER GOES HERE (all openssl commands to accomplish the job)
-#
+
+# step 1: generating 32 byte random key, saving it as LargeFileKey
+openssl rand -base64 32 > LargeFileKey
+
+# step 2: encrypting that key, saving it as LargeFileKey.enc
+openssl rsautl -encrypt -inkey pubkey.pem -pubin -in LargeFileKey -out LargeFileKey.enc
+
+# step 3: encrypting publicfile.long and placing the result in privatefile.long using key LargeFileKey.enc
+openssl enc -aes-256-cbc -pbkdf2 -iter 100000 -salt -in publicfile.long -out privatefile.long -k LargeFileKey
+
 
 # Complete the following:
 # If you had bigbad private key, you could decrypt the sessionKey using ...
 #
-# YOUR ANSWER GOES HERE
+# openssl rsautl -decrypt -inkey privkey.pem -in LargeFileKey.enc -out LargeFileKey.dec
 #
 # and then decrypt privatefile.long using ...
-#
-# YOUR ANSWER GOES HERE
-#
+# openssl enc -aes-256-cbc -pbkdf2 -iter 100000 -salt -d -in publicfile.long -out privatefile.long -k LargeFileKey.dec
