@@ -1,0 +1,94 @@
+#!/bin/bash
+
+# GRAB bigbad CERTIFICATE FROM THE WEB (SEE: bigbadcert.pem)
+# PLACE IT IN THIS DIRECTORY
+
+
+openssl x509 -in bigbadcert.pem -noout -text
+# DOCUMENT ITS OUTPUT, DESCRIBE THE IMPORTANT PARTS OF bigbad x509 certificate
+#
+# YOUR ANSWER GOES HERE
+# - It is a x509 certificate signed by Arnold for someone named bigbad (wolf?) in
+#   the organization 'three little pigs Inc.' in Toronto.
+# - It is valid from Nov 23 2020 to Nov 23 2021
+# - The certificate can't sign other other certificates and it also
+#
+# Is bigbadcert.pem self signed? If not, who signed it? How would you verify
+# that it was correctly signed?
+#
+# YOUR ANSWER GOES HERE
+# - it is signed by arnold
+# - using this command: "openssl verify -verbose -CAfile arnoldscert.pem  bigbadcert.pem"
+#   and output: "bigbadcert.pem: OK", we can verify that the certificate is correctly signed.
+#   To do this we need to download arnoldscert.pem from the website too.
+
+# Is bigbadcert.pem a Certificate Authority?
+#
+# YOUR ANSWER GOES HERE
+# - No, it cannot sign other certificates.
+
+openssl x509 -in bigbadcert.pem -pubkey -noout > pubkey.pem
+# What does the above do?
+#
+# YOUR ANSWER GOES HERE
+# - it saves the public key of the certificate bigbadcert.pem in pubkey.pem
+
+# In what follows, you use pubkey.pem encrypt and send publicfile.short to bigbad
+
+openssl pkeyutl -encrypt -pubin -in publicfile.short -out privatefile.short -inkey pubkey.pem  -keyform PEM
+# What does the above do?
+#
+# This command uses the public key operation (pkeyutl) to encrypt 'publicfile.short' and saves the result in
+# 'privatefile.short'. It uses the public key we generated of the bigbadcert.pem certificate (pubkey.pem) and saves
+# it as a pem file.
+#
+# If you had bigbad private key, you could decrypt the privatefile.short using...
+# openssl pkeyutl -decrypt -in privatefile.short -out publicfile.short2 -inkey key.pem -keyform PEM
+
+
+# In what follows, you use pubkey.pem encrypt and send publicfile.long to bigbad
+
+openssl pkeyutl -encrypt -pubin -in publicfile.long -out privatefile.long -inkey pubkey.pem  -keyform PEM
+# What does the above do?
+#
+# The above command attempts to encrypt publicfile.long using the public key of bigbadcert.pem and
+# save the result in privatefile.long as a pem file.
+#
+#
+# EXPLAIN THE ERROR MESSAGE (See the definition of RSA in the lecture notes)
+#
+# the error message is:
+#     Public Key operation error
+#     140029099537664:error:0406D06E:rsa routines:RSA_padding_add_PKCS1_type_2:data too large for key size:../crypto/rsa/rsa_pk1.c:124:
+#
+# - RSA encryption uses factoring of large prime numbers. So if the size of our message(m) is M = |m| and
+#   M < p*q then our p and/or q have to be larger than M. In this case the message to be encrypted is very large,
+#   to be specific it is 25559 characters (bytes). So our p and/or q have to also be very large. So the modular
+#   calculations needed for RSA are unfeesible, as the numbers are too large. Example calculation: M^e mod p*q
+#
+# - More specifically the error is saying: RSA adds padding to messages (RSA_padding_add_PKCS1_type_2) and in this case
+#   the message we are encrypting is too large for the padding to be added.
+
+# It seems that we can only use RSA on short messages, so encrypt a short session key and then
+# use that with AES to encrypt publicfile.long
+# produce sessionKey AND privatefile.long in this directory
+#
+# YOUR ANSWER GOES HERE (all openssl commands to accomplish the job)
+
+# step 1: generating 32 byte random key, saving it as LargeFileKey
+openssl rand -base64 32 > LargeFileKey
+
+# step 2: encrypting that key, saving it as LargeFileKey.enc
+openssl rsautl -encrypt -inkey pubkey.pem -pubin -in LargeFileKey -out LargeFileKey.enc
+
+# step 3: encrypting publicfile.long and placing the result in privatefile.long using key LargeFileKey
+openssl enc -aes-256-cbc -pbkdf2 -iter 100000 -salt -in publicfile.long -out privatefile.long -k LargeFileKey
+
+
+# Complete the following:
+# If you had bigbad private key, you could decrypt the sessionKey using ...
+#
+# openssl rsautl -decrypt -inkey privkey.pem -in LargeFileKey.enc -out LargeFileKey.dec
+#
+# and then decrypt privatefile.long using ...
+# openssl enc -aes-256-cbc -pbkdf2 -iter 100000 -salt -d -in publicfile.long -out privatefile.long -k LargeFileKey.dec

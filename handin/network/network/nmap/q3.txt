@@ -1,0 +1,63 @@
+All questions rely on the network setup given to you in lecture.
+See Diagrams.* in this directory.
+
+------------------------------------------------------------------------------------
+q3: [1 Marks]
+Place Kali on the 192.168.10.* network
+Run firewallRestrictive on FC4 and then
+run nmap to list open ports and versions on the 192.168.10.* network.
+------------------------------------------------------------------------------------
+
+	YOUR SCAN GOES HERE, SHOULD SHOW 192.168.10.10, 192.168.10.17, 192.168.10.100, ...
+
+	Starting Nmap 7.80 ( https://nmap.org ) at 2020-12-02 23:23 EST
+	Nmap scan report for 192.168.10.1
+	Host is up (0.0012s latency).
+	Not shown: 995 filtered ports
+	PORT     STATE SERVICE
+	135/tcp  open  msrpc
+	139/tcp  open  netbios-ssn
+	445/tcp  open  microsoft-ds
+	903/tcp  open  iss-console-mgr
+	5357/tcp open  wsdapi
+	MAC Address: 00:50:56:C0:00:03 (VMware)
+
+	Nmap scan report for 192.168.10.10
+	Host is up (0.0017s latency).
+	Not shown: 999 filtered ports
+	PORT   STATE SERVICE
+	22/tcp open  ssh
+	MAC Address: 00:0C:29:FC:33:6B (VMware)
+
+	Nmap scan report for 192.168.10.17
+	Host is up (0.0028s latency).
+	All 1000 scanned ports on 192.168.10.17 are closed
+	MAC Address: 00:0C:29:1F:EE:C4 (VMware)
+
+	Nmap scan report for 192.168.10.18
+	Host is up (0.0011s latency).
+	Not shown: 997 closed ports
+	PORT    STATE SERVICE
+	135/tcp open  msrpc
+	139/tcp open  netbios-ssn
+	445/tcp open  microsoft-ds
+	MAC Address: 00:0C:29:BB:03:B8 (VMware)
+
+	Nmap scan report for 192.168.10.100
+	Host is up (0.0014s latency).
+	Not shown: 998 closed ports
+	PORT   STATE SERVICE
+	22/tcp open  ssh
+	80/tcp open  http
+	MAC Address: 00:0C:29:95:C6:0C (VMware)
+
+	Nmap scan report for 192.168.10.254
+	Host is up (0.00047s latency).
+	All 1000 scanned ports on 192.168.10.254 are filtered
+	MAC Address: 00:50:56:E5:7C:85 (VMware)
+
+	Nmap scan report for 192.168.10.129
+	Host is up (0.00018s latency).
+	All 1000 scanned ports on 192.168.10.129 are closed
+
+	Nmap done: 256 IP addresses (7 hosts up) scanned in 58.03 seconds

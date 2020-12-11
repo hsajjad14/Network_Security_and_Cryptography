@@ -1,0 +1,75 @@
+#!/bin/bash
+
+DEMOCA="demoCA";
+
+if  [ -d $DEMOCA ]; then
+	echo "$DEMOCA exists, remove first before setup";
+else
+	echo "$DEMOCA does not exist, creating";
+	mkdir $DEMOCA
+	mkdir $DEMOCA/certs
+	mkdir $DEMOCA/crl
+	touch $DEMOCA/index.txt
+	mkdir $DEMOCA/newcerts
+	mkdir $DEMOCA/requests
+	echo "1000" > $DEMOCA/serial
+	mkdir $DEMOCA/private
+
+	# WHAT DOES THE ABOVE DO?
+	# YOUR ANSWER GOES HERE
+	#
+	# - first it checks if there is already a directory called demoCA and if there is it throws an error
+	# - if there is not:
+	# 	- it creates the directory demoCA with subdirectories certs, crl, newcerts, requests and private.
+	# 	- it creates a file called index.txt in the demoCA directory
+	# 	- it creates a file called serial in the demoCA directory and writes "1000" to it
+
+
+	openssl genrsa -des3 -out $DEMOCA/private/cakey.pem 1024
+	openssl req -config openssl.conf -new -x509 -days 1001 -key $DEMOCA/private/cakey.pem -out $DEMOCA/cacert.pem
+	# The above does ... (high level answer expected)
+	#
+	# 	YOUR ANSWER GOES HERE
+	#   - This generates a 1024 bit RSA private key that is encrypted with the des3 algorithm and stored in
+	#     /demoCA/private/cakey.pem (password 1234)
+	#   - The second command creates a self signed x509 certificate that is signed by the key created above and certified for 		#	1001 days and stores it in /demoCA/cacert.pm
+	#
+	# Look in the $DEMOCA directories and document the files that were created
+	# The following files will be created in $DEMOCA
+	# $DEMOCA/private/cakey.pem
+	# 	YOUR DESCRIPTION OF THIS FILE BELOW, WHAT DOES IT CONTAIN, WHAT IS ITS ROLE IN THIS GAME
+	# 	YOUR ANSWER GOES HERE
+	# 	...
+	#        This file contains our private key that we use to sign certificates
+	#
+	#
+	#
+	# $DEMOCA/cacert.pem
+	# 	YOUR DESCRIPTION OF THIS FILE BELOW, WHAT DOES IT CONTAIN, WHAT IS ITS ROLE IN THIS GAME
+	# 	YOUR ANSWER GOES HERE
+	# 	...
+	# ...
+	#
+	#		using the command: "openssl x509 -in cacert.pem -inform pem -text -noout"
+	#		we can see that this file is a self signed x509 certificate, signed by "Haider Sajjd"
+	#
+	#
+
+	openssl x509 -in $DEMOCA/cacert.pem -noout -text
+	# DOCUMENT ITS OUTPUT, DESCRIBE THE IMPORTANT PARTS OF YOUR x509 certificate
+	#
+	# 	YOUR ANSWER GOES HERE
+	# - This certificate is a self signed certificate that is signed by me (Haider Sajjad)
+	# - We see that CA:TRUE, so we can sign other certificates.
+	# - We also see the digital signature of the certificate is :
+	#	sha256WithRSAEncryption
+	#         66:a0:e2:c2:c5:9d:f0:c4:b1:61:51:ce:6a:73:86:6b:16:e4:
+	#         fd:0d:f5:a8:c8:39:1d:9e:cd:45:05:68:ad:7a:60:ea:ba:e3:
+	#         25:b0:5b:95:67:7a:d3:7f:4a:2f:b9:e5:1f:47:94:37:c5:f2:
+	#         1a:f4:81:c6:d4:bf:d1:6d:1e:9f:aa:1f:41:f8:a0:e1:02:80:
+	#         0e:c3:d7:ac:d8:81:d1:3e:d3:2c:5e:ca:3e:50:c1:99:84:7f:
+	#         ca:b9:5b:10:75:21:82:88:cc:fd:e7:56:7a:b0:28:73:bb:a3:
+	#         a5:77:6c:55:af:1b:83:d1:e6:c5:0e:b3:8d:06:87:e4:40:95:
+        #      	  6f:ab
+
+fi
