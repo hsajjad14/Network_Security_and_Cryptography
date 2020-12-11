@@ -32,7 +32,7 @@ else
 	# 	YOUR ANSWER GOES HERE
 	#   - This generates a 1024 bit RSA private key that is encrypted with the des3 algorithm and stored in
 	#     /demoCA/private/cakey.pem (password 1234)
-	#   - The second command creates a self signed x509 certificate that is signed by the key created above and certified for 1001 days and stores it in /demoCA/cacert.pm
+	#   - The second command creates a self signed x509 certificate that is signed by the key created above and certified for 		#	1001 days and stores it in /demoCA/cacert.pm
 	#
 	# Look in the $DEMOCA directories and document the files that were created
 	# The following files will be created in $DEMOCA
@@ -40,7 +40,7 @@ else
 	# 	YOUR DESCRIPTION OF THIS FILE BELOW, WHAT DOES IT CONTAIN, WHAT IS ITS ROLE IN THIS GAME
 	# 	YOUR ANSWER GOES HERE
 	# 	...
-	#
+	#        This file contains our private key that we use to sign certificates
 	#
 	#
 	#
@@ -59,5 +59,17 @@ else
 	# DOCUMENT ITS OUTPUT, DESCRIBE THE IMPORTANT PARTS OF YOUR x509 certificate
 	#
 	# 	YOUR ANSWER GOES HERE
+	# - This certificate is a self signed certificate that is signed by me (Haider Sajjad)
+	# - We see that CA:TRUE, so we can sign other certificates.
+	# - We also see the digital signature of the certificate is :
+	#	sha256WithRSAEncryption
+	#         66:a0:e2:c2:c5:9d:f0:c4:b1:61:51:ce:6a:73:86:6b:16:e4:
+	#         fd:0d:f5:a8:c8:39:1d:9e:cd:45:05:68:ad:7a:60:ea:ba:e3:
+	#         25:b0:5b:95:67:7a:d3:7f:4a:2f:b9:e5:1f:47:94:37:c5:f2:
+	#         1a:f4:81:c6:d4:bf:d1:6d:1e:9f:aa:1f:41:f8:a0:e1:02:80:
+	#         0e:c3:d7:ac:d8:81:d1:3e:d3:2c:5e:ca:3e:50:c1:99:84:7f:
+	#         ca:b9:5b:10:75:21:82:88:cc:fd:e7:56:7a:b0:28:73:bb:a3:
+	#         a5:77:6c:55:af:1b:83:d1:e6:c5:0e:b3:8d:06:87:e4:40:95:
+        #      	  6f:ab
 
 fi

@@ -8,7 +8,7 @@
 
 # - the following command generates a 1024 bit RSA private key
 #   and stores it in the file key.pem.
-# - This private key is used for decrypting and encrypting (????)
+# - This private key is used for for signing certificates
 
 openssl genrsa -out key.pem 1024
 
