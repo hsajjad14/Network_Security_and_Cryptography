@@ -314,3 +314,13 @@ Sign the certificate? [y/n]:y
 1 out of 1 certificate requests certified, commit? [y/n]y
 Write out database with 1 new entries
 Data Base Updated
+
+
+to show private key, certificate, and csr all maych
+
+kali@kali:~/Desktop/a4/openssl/makeCSR$ openssl rsa -noout -modulus -in key.pem | openssl sha256
+(stdin)= 3088b281948a2b1a795140fd0b198502f6ea651c43d21c6f38fe28c138bb82a2
+kali@kali:~/Desktop/a4/openssl/makeCSR$ openssl x509 -noout -modulus -in newcert.pem | openssl sha256
+(stdin)= 3088b281948a2b1a795140fd0b198502f6ea651c43d21c6f38fe28c138bb82a2
+kali@kali:~/Desktop/a4/openssl/makeCSR$ openssl req -noout -modulus -in req.pem | openssl sha256
+(stdin)= 3088b281948a2b1a795140fd0b198502f6ea651c43d21c6f38fe28c138bb82a2
